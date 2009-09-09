@@ -7,10 +7,12 @@
 
 (defn extract-metadata [file]
   (let [tag (.getTag (AudioFileIO/read file))]
-    {:title  (.getFirstTitle  tag)
-     :album  (.getFirstAlbum  tag)
-     :artist (.getFirstArtist tag)
-     :path   (.getPath file)}))
+    (if tag ; getTag may return null
+      {:title  (.getFirstTitle  tag)
+       :album  (.getFirstAlbum  tag)
+       :artist (.getFirstArtist tag)
+       :path   (.getPath file)}
+      nil)))
 
 (defn list-mp3 []
   (let [is-mp3? (fn [file] (and (.isFile file)
@@ -35,10 +37,13 @@
    (for [[k v] song]
      [:p (str (name k) ": " v)])])
 
-(def mp3-page
+(def *song-db*
+     (let [parsed-songs (map extract-metadata (list-mp3))]
+       (filter (complement nil?) parsed-songs)))
+
+(defn mp3-page [request]
      (html-doc "MP3s"
-       (map #(song-table (extract-metadata %))
-            (take 10 (list-mp3)))))
+       (map song-table *song-db*)))
 
 (defroutes webservice
   (GET "/" mp3-page)) 
