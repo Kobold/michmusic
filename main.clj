@@ -31,27 +31,22 @@
     (fn []
       (dorun (map extract-metadata (list-mp3)))))))
 
-(defn html-doc 
-  [title & body] 
-  (html 
-   (doctype :html4) 
-   [:html 
-    [:head 
-     [:title title]] 
-    [:body 
-     [:div 
-      [:h2 
-       [:a {:href "/"} "Home"]]]
-     body]])) 
-
-(defn song-table [song]
-  [:div.song
-   (for [[k v] song]
-     [:p (str (name k) ": " v)])])
+(defn html-doc
+  [body]
+  (html
+   (doctype :html4)
+   [:html
+    [:head
+     [:title "Mich House Music"]]
+    [:body body]]))
 
 (defn mp3-page [request]
-     (html-doc "MP3s"
-       (map song-table @*song-db*)))
+  (let [artists (set (map :artist @*song-db*))]
+    (html-doc
+        [:div.artists
+         [:h2 "Artists"]
+         [:ul (map (fn [x] [:li x])
+                   (sort artists))]])))
 
 (defroutes webservice
-  (GET "/" mp3-page)) 
+  (GET "/" mp3-page))
