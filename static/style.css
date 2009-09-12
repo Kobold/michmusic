@@ -1,0 +1,17 @@
+body {
+    margin: 10px auto;
+    width: 800px;
+}
+
+.artists {
+    width: 200px;
+}
+
+.artists h2 {
+    text-align: center;
+}
+
+.title {
+    text-align: center;
+    width: 100%;
+}

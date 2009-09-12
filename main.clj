@@ -4,6 +4,7 @@
            [org.jaudiotagger.audio AudioFileIO]))
 
 (def *music-directory* (File. "/Users/kobold/Music"))
+(def *static-files* "/Users/kobold/michmusic/static")
 (def *song-db* (ref []))
 
 (defstruct song :title :album :artist :path)
@@ -30,23 +31,32 @@
    (Thread.
     (fn []
       (dorun (map extract-metadata (list-mp3)))))))
+(load-song-db)
 
 (defn html-doc
-  [body]
+  [& body]
   (html
    (doctype :html4)
    [:html
     [:head
-     [:title "Mich House Music"]]
+     [:title "Mich House Music"]
+     [:link {:rel "stylesheet" :type "text/css" :href "/static/style.css"}]]
     [:body body]]))
 
 (defn mp3-page [request]
   (let [artists (set (map :artist @*song-db*))]
     (html-doc
+        [:div.title
+         [:h1 "Mich House Music"]]
         [:div.artists
          [:h2 "Artists"]
          [:ul (map (fn [x] [:li x])
                    (sort artists))]])))
 
 (defroutes webservice
-  (GET "/" mp3-page))
+  (GET "/"
+    mp3-page)
+  (GET "/static/*"
+    (or (serve-file *static-files* (params :*)) :next))
+  (ANY "*"
+    (page-not-found)))
