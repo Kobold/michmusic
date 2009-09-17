@@ -31,7 +31,6 @@
    (Thread.
     (fn []
       (dorun (map extract-metadata (list-mp3)))))))
-(load-song-db)
 
 (defn html-doc
   [& body]
