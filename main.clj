@@ -4,7 +4,7 @@
            [org.jaudiotagger.audio AudioFileIO]))
 
 (def *music-directory* (File. "/Users/kobold/Music"))
-(def *static-files* "/Users/kobold/michmusic/static")
+
 (def *song-db* (ref []))
 
 (defstruct song :title :album :artist :path)
@@ -53,10 +53,16 @@
          [:ul (map (fn [x] [:li x])
                    (sort artists))]])))
 
+(def static-files
+     #^{:doc "Location of static files (css, images, etc)."}
+     (str (.getParent (File. *file*))
+          File/separator
+          "static"))
+
 (defroutes webservice
   (GET "/"
     mp3-page)
   (GET "/static/*"
-    (or (serve-file *static-files* (params :*)) :next))
+    (or (serve-file static-files (params :*)) :next))
   (ANY "*"
     (page-not-found)))
