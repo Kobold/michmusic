@@ -1,6 +1,7 @@
 (ns michmusic.main
   (:use compojure)
-  (:require [michmusic.database :as db])
+  (:require [compojure.encodings :as encodings]
+            [michmusic.database :as db])
   (:import [java.io File]
            [org.jaudiotagger.audio AudioFileIO]))
 
@@ -17,7 +18,7 @@
       [:h1 "Mich House Music"]]
      [:div.artists
       [:h2 "Artists"]
-      (unordered-list (map #(link-to (str "/artist/" %) %)
+      (unordered-list (map #(link-to (str "/artist/" (encodings/urlencode %)) %)
                            (db/artists)))]
      [:div.main
       body]]]))
@@ -28,6 +29,7 @@
 
 (defn artist-page [artist]
   (html-doc
+    [:h2 artist]
     (unordered-list
      (map #(link-to (str "/file/" (:artist %) "_" (:title %) ".mp3")
                     (str (:title %) " - " (:artist %)))
@@ -43,7 +45,7 @@
   (GET "/"
     mp3-page)
   (GET "/artist/:artist"
-    (artist-page (params :artist)))
+    (artist-page (encodings/urldecode (params :artist))))
   (GET #"/file/(\w+)_(\w+)\.mp3"
     (let [[artist title] (:route-params request)]
       (if-let [path (db/song-path artist title)]
