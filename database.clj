@@ -32,3 +32,8 @@
   (sort
    (map :artist
         (clojure.set/project @song-db [:artist]))))
+
+(defn songs-for-artist
+  [a]
+  (clojure.set/select #(= (:artist %) a)
+                      @song-db))
