@@ -13,11 +13,11 @@ body {
     width: 25%;
 }
 
-.artists h2 {
-    text-align: center;
-}
-
 .main {
     float: right;
     width: 75%;
+}
+
+h2 {
+    text-align: center;
 }

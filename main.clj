@@ -10,10 +10,9 @@
 
 (defn song-link
   [s]
-  (let [a (:artist s)
-        t (:title s)]
-    (link-to (str "/file/" a "_" t ".mp3")
-             (str t " - " a))))
+  (let [t (:title s)]
+    (link-to (str "/file/" (:artist s) "_" t ".mp3")
+             (str t " - " (:album s)))))
 
 (defn html-doc
   [& body]
