@@ -1,6 +1,8 @@
 (ns michmusic.main
-  (:use compojure)
-  (:require [compojure.encodings :as encodings]
+  (:use clojure.contrib.json.read
+        compojure)
+  (:require [clojure.http.client :as client]
+            [compojure.encodings :as encodings]
             [michmusic.database :as db])
   (:import [java.io File]))
 
@@ -13,6 +15,20 @@
   (let [t (:title s)]
     (link-to (str "/file/" (:artist s) "_" t ".mp3")
              (str t " - " (:album s)))))
+
+
+(defn artist-info
+  [artist]
+  (let [url (url-params "http://ws.audioscrobbler.com/2.0/"
+                        {:method "artist.getinfo"
+                         :artist artist
+                         :format "json"
+                         :api_key "6d02d500b71c11ea4a22f28832c82c6b"})
+        response (client/request url)
+        json ((read-json (apply str (response :body-seq))) "artist")]
+    [((json "bio") "summary")
+     ((( json "image") 3) "#text")]))
+
 
 (defn html-doc
   [& body]
@@ -44,10 +60,14 @@
 
 (defn artist-page
   [artist]
-  (html
-    [:h2 artist]
-    (unordered-list
-     (map song-link (db/songs-for-artist artist)))))
+  (let [[summary img-src] (artist-info artist)
+        songs (db/songs-for-artist artist)]
+    (html
+     [:h2 artist]
+     [:img {:src img-src :alt artist}]
+     [:p summary]
+     (unordered-list
+      (map song-link songs)))))
 
 (defn file-download
   [request]

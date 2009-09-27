@@ -32,3 +32,11 @@ h2 {
 #current-artist {
     width: 100%;
 }
+
+#main img {
+   float: right;
+}
+
+#main ul {
+   clear: both;
+}
