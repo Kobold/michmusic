@@ -1,6 +1,7 @@
 body {
     background-color: #111111;
     margin: 0px auto;
+    margin-bottom: 50px;
     width: 1000px;
 }
 
@@ -26,4 +27,8 @@ body {
 
 h2 {
     text-align: center;
+}
+
+#current-artist {
+    width: 100%;
 }
