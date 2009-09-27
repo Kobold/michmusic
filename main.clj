@@ -56,12 +56,6 @@
       (File. path)
       :next)))
 
-(def static-files
-     #^{:doc "Location of static files (css, images, etc)."}
-     (str (.getParent (File. *file*))
-          File/separator
-          "static"))
-
 (defroutes webservice
   (GET "/"
     mp3-page)
@@ -70,6 +64,6 @@
   (GET #"/file/(.+?)_(.+)\.mp3"
     file-download)
   (GET "/static/*"
-    (or (serve-file static-files (params :*)) :next))
+    (or (serve-file "static" (params :*)) :next))
   (ANY "*"
     (page-not-found)))
