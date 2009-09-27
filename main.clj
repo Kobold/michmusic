@@ -63,8 +63,8 @@
 (defroutes webservice
   (GET "/"
     mp3-page)
-  (GET "/artist/:artist"
-    (artist-page (encodings/urldecode (params :artist))))
+  (GET #"/artist/(.+)"
+    (artist-page (encodings/urldecode ((:route-params request) 0))))
   (GET #"/file/(.+?)_(.+)\.mp3"
     file-download)
   (GET "/static/*"
