@@ -11,7 +11,7 @@
    [:html
     [:head
      [:title "Mich House Music"]
-     [:link {:rel "stylesheet" :type "text/css" :href "/static/style.css"}]]
+     (include-css "/static/style.css")]
     [:body
      [:div.title
       [:h1 "Mich House Music"]]
