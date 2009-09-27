@@ -25,14 +25,14 @@
      (include-js "/static/jquery-1.3.2.min.js"
                  "/static/navigation.js")]
     [:body
-     [:div.title
+     [:div#title
       [:img {:src "/static/logo.png" :alt "Mich Music"}]]
-     [:div.content
-      [:div.artists
+     [:div#content
+      [:div#artists
        [:h2 "Artists"]
        [:select#current-artist {:size 25}
         (select-options (map artist-option (db/artists)))]]
-      [:div.main
+      [:div#main
        body]]]]))
 
 (defn mp3-page

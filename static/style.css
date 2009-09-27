@@ -5,22 +5,22 @@ body {
     width: 1000px;
 }
 
-.title {
+#title {
     text-align: center;
     width: 100%;
 }
 
-.content {
+#content {
     background-color: white;
     overflow: auto;
 }
 
-.artists {
+#artists {
     float: left;
     width: 30%;
 }
 
-.main {
+#main {
     float: right;
     width: 70%;
 }
