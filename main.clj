@@ -22,7 +22,9 @@
     [:head
      [:title "Mich House Music"]
      (include-css "/static/style.css")
-     (include-js "/static/jquery-1.3.2.min.js"
+     (include-js "/static/external/jquery-1.3.2.min.js"
+                 "/static/external/swfobject.js"
+                 "/static/external/1bit.js"
                  "/static/navigation.js")]
     [:body
      [:div#title

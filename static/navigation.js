@@ -1,7 +1,14 @@
-// sets up navigation using the select element
+// sets up navigation between artists and the music player
+
+var oneBit = new OneBit('/static/external/1bit.swf');
+
+function artist_selected(event) {
+  $.get($(this).val(), {}, function(data) {
+    $('#main').html(data);
+    oneBit.apply('a');
+  });
+};
 
 $(function() {
-  $('#current-artist').change(function (event) {
-    $('#main').load($(this).val());
-  });
+  $('#current-artist').change(artist_selected);
 });
