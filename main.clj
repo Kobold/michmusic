@@ -24,12 +24,13 @@
      (include-css "/static/style.css")]
     [:body
      [:div.title
-      [:h1 "Mich House Music"]]
-     [:div.artists
-      [:h2 "Artists"]
-      (unordered-list (map artist-link (db/artists)))]
-     [:div.main
-      body]]]))
+      [:img {:src "/static/logo.png" :alt "Mich Music"}]]
+     [:div.content
+      [:div.artists
+       [:h2 "Artists"]
+       (unordered-list (map artist-link (db/artists)))]
+      [:div.main
+       body]]]]))
 
 (defn mp3-page
   [request]

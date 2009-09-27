@@ -1,6 +1,7 @@
 body {
-    margin: 10px auto;
-    width: 800px;
+    background-color: #111111;
+    margin: 0px auto;
+    width: 1000px;
 }
 
 .title {
@@ -8,14 +9,19 @@ body {
     width: 100%;
 }
 
+.content {
+    background-color: white;
+    overflow: auto;
+}
+
 .artists {
     float: left;
-    width: 25%;
+    width: 30%;
 }
 
 .main {
     float: right;
-    width: 75%;
+    width: 70%;
 }
 
 h2 {
