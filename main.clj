@@ -12,16 +12,19 @@
     [:head
      [:title "Mich House Music"]
      [:link {:rel "stylesheet" :type "text/css" :href "/static/style.css"}]]
-    [:body body]]))
+    [:body
+     [:div.title
+      [:h1 "Mich House Music"]]
+     [:div.artists
+      [:h2 "Artists"]
+      [:ul (map (fn [x] [:li x])
+                (db/artists))]]
+     [:div.main
+      body]]]))
 
 (defn mp3-page [request]
   (html-doc
-    [:div.title
-     [:h1 "Mich House Music"]]
-    [:div.artists
-     [:h2 "Artists"]
-     [:ul (map (fn [x] [:li x])
-               (db/artists))]]))
+    [:p "hi"]))
 
 (def static-files
      #^{:doc "Location of static files (css, images, etc)."}

@@ -3,15 +3,21 @@ body {
     width: 800px;
 }
 
+.title {
+    text-align: center;
+    width: 100%;
+}
+
 .artists {
-    width: 200px;
+    float: left;
+    width: 25%;
 }
 
 .artists h2 {
     text-align: center;
 }
 
-.title {
-    text-align: center;
-    width: 100%;
+.main {
+    float: right;
+    width: 75%;
 }
