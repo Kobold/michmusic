@@ -2,8 +2,18 @@
   (:use compojure)
   (:require [compojure.encodings :as encodings]
             [michmusic.database :as db])
-  (:import [java.io File]
-           [org.jaudiotagger.audio AudioFileIO]))
+  (:import [java.io File]))
+
+(defn artist-link
+  [a]
+  (link-to (str "/artist/" (encodings/urlencode a)) a))
+
+(defn song-link
+  [s]
+  (let [a (:artist s)
+        t (:title s)]
+    (link-to (str "/file/" a "_" t ".mp3")
+             (str t " - " a))))
 
 (defn html-doc
   [& body]
@@ -18,22 +28,28 @@
       [:h1 "Mich House Music"]]
      [:div.artists
       [:h2 "Artists"]
-      (unordered-list (map #(link-to (str "/artist/" (encodings/urlencode %)) %)
-                           (db/artists)))]
+      (unordered-list (map artist-link (db/artists)))]
      [:div.main
       body]]]))
 
-(defn mp3-page [request]
+(defn mp3-page
+  [request]
   (html-doc
     [:p "hi"]))
 
-(defn artist-page [artist]
+(defn artist-page
+  [artist]
   (html-doc
     [:h2 artist]
     (unordered-list
-     (map #(link-to (str "/file/" (:artist %) "_" (:title %) ".mp3")
-                    (str (:title %) " - " (:artist %)))
-          (db/songs-for-artist artist)))))
+     (map song-link (db/songs-for-artist artist)))))
+
+(defn file-download
+  [request]
+  (let [[artist title] (map encodings/urldecode (:route-params request))]
+    (if-let [path (db/song-path artist title)]
+      (File. path)
+      :next)))
 
 (def static-files
      #^{:doc "Location of static files (css, images, etc)."}
@@ -46,11 +62,8 @@
     mp3-page)
   (GET "/artist/:artist"
     (artist-page (encodings/urldecode (params :artist))))
-  (GET #"/file/(\w+)_(\w+)\.mp3"
-    (let [[artist title] (:route-params request)]
-      (if-let [path (db/song-path artist title)]
-        (File. path)
-        :next)))
+  (GET #"/file/(.+?)_(.+)\.mp3"
+    file-download)
   (GET "/static/*"
     (or (serve-file static-files (params :*)) :next))
   (ANY "*"
