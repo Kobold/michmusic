@@ -17,7 +17,7 @@
       [:h1 "Mich House Music"]]
      [:div.artists
       [:h2 "Artists"]
-      (unordered-list (map #(link-to (str "/" %) %)
+      (unordered-list (map #(link-to (str "/artist/" %) %)
                            (db/artists)))]
      [:div.main
       body]]]))
@@ -29,7 +29,8 @@
 (defn artist-page [artist]
   (html-doc
     (unordered-list
-     (map #(str (:title %) " - " (:artist %))
+     (map #(link-to (str "/file/" (:artist %) "_" (:title %) ".mp3")
+                    (str (:title %) " - " (:artist %)))
           (db/songs-for-artist artist)))))
 
 (def static-files
@@ -41,8 +42,13 @@
 (defroutes webservice
   (GET "/"
     mp3-page)
-  (GET "/:artist"
+  (GET "/artist/:artist"
     (artist-page (params :artist)))
+  (GET #"/file/(\w+)_(\w+)\.mp3"
+    (let [[artist title] (:route-params request)]
+      (if-let [path (db/song-path artist title)]
+        (File. path)
+        :next)))
   (GET "/static/*"
     (or (serve-file static-files (params :*)) :next))
   (ANY "*"

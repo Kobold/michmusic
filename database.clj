@@ -37,3 +37,10 @@
   [a]
   (clojure.set/select #(= (:artist %) a)
                       @song-db))
+
+(defn song-path
+  [artist title]
+  (let [[s] (filter #(and (= (:artist %) artist)
+                         (= (:title %) title))
+                   @song-db)]
+    (if s (:path s))))
