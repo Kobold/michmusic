@@ -2,6 +2,6 @@
 
 $(function() {
   $('#current-artist').change(function (event) {
-    window.location = $(this).val();
+    $('.main').load($(this).val());
   });
 });

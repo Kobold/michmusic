@@ -42,7 +42,7 @@
 
 (defn artist-page
   [artist]
-  (html-doc
+  (html
     [:h2 artist]
     (unordered-list
      (map song-link (db/songs-for-artist artist)))))
