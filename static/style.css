@@ -5,6 +5,10 @@ body {
     width: 1000px;
 }
 
+#navigation {
+   position: absolute;
+}
+
 #title {
     text-align: center;
     width: 100%;

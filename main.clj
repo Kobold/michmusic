@@ -43,20 +43,23 @@
                  "/static/external/1bit.js"
                  "/static/navigation.js")]
     [:body
-     [:div#title
+     [:div#navigation
+      (unordered-list [(link-to "/" "Browse")
+                       (link-to "/upload/" "Upload")])]
+     [:h1#title
       [:img {:src "/static/logo.png" :alt "Mich Music"}]]
      [:div#content
-      [:div#artists
-       [:h2 "Artists"]
-       [:select#current-artist {:size 25}
-        (select-options (map artist-option (db/artists)))]]
-      [:div#main
-       body]]]]))
+      body]]]))
 
 (defn mp3-page
   [request]
   (html-doc
-    [:p "hi"]))
+    [:div#artists
+     [:h2 "Artists"]
+     [:select#current-artist {:size 25}
+      (select-options (map artist-option (db/artists)))]]
+    [:div#main
+     [:p "hi"]]))
 
 (defn artist-page
   [artist]
@@ -68,6 +71,14 @@
      [:p summary]
      (unordered-list
       (map song-link songs)))))
+
+(defn upload-page
+  [request]
+  (html-doc
+    [:h2 "Upload File"]
+    (form-to {:enctype "multipart/form-data"} [:post "/upload/"]
+             (file-upload :test)
+             (submit-button "Go"))))
 
 (defn file-download
   [request]
@@ -85,6 +96,10 @@
 (defroutes webservice
   (GET "/"
     mp3-page)
+  (GET "/upload/"
+    upload-page)
+  (POST "/upload/"
+    (html-doc [:p (prn-str (get-multipart-params request))]))
   (GET #"/artist/(.+)"
     (artist-page (encodings/urldecode ((:route-params request) 0))))
   (GET #"/file/(.+?)_(.+)\.mp3"
