@@ -8,12 +8,12 @@
             [michmusic.database :as db])
   (:import [java.io File]))
 
-(defn song-link
-  [s]
-  (let [t (:title s)]
-    (link-to (str "/file/" (:artist s) "_" t ".mp3")
-             (str t " - " (:album s)))))
-
+(defn browse-page
+  [request]
+  (browse-html
+   (map (fn [a] {:label a
+                 :value (str "/artist/" (encodings/urlencode a))})
+        (db/artists))))
 
 (defn artist-info
   [artist]
@@ -27,24 +27,13 @@
     [((json "bio") "summary")
      ((( json "image") 3) "#text")]))
 
-
-(defn browse-page
-  [request]
-  (browse-html
-   (map (fn [a] {:label a
-                 :value (str "/artist/" (encodings/urlencode a))})
-        (db/artists))))
-
 (defn artist-page
   [artist]
-  (let [[summary img-src] (artist-info artist)
-        songs (db/songs-for-artist artist)]
-    (html
-     [:h2 artist]
-     [:img {:src img-src :alt artist}]
-     [:p summary]
-     (unordered-list
-      (map song-link songs)))))
+  (let [[summary img-src] (artist-info artist)]
+    (artist-html artist
+                 summary
+                 img-src
+                 (db/songs-for-artist artist))))
 
 (defn file-download
   [request]

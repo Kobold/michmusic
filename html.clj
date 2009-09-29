@@ -37,6 +37,20 @@
     [:div#main
      [:p "hi"]]))
 
+(defn song-link
+  [s]
+  (let [t (:title s)]
+    (link-to (str "/file/" (:artist s) "_" t ".mp3")
+             (str t " - " (:album s)))))
+
+(defn artist-html
+  [artist summary img-src songs]
+  (html
+   [:h2 artist]
+   [:img {:src img-src :alt artist}]
+   [:p summary]
+   (unordered-list
+    (map song-link songs))))
 
 (defn upload-get-html
   []
