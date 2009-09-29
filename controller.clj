@@ -13,15 +13,19 @@
 
 (defn artist-info
   [artist]
-  (let [url (url-params "http://ws.audioscrobbler.com/2.0/"
-                        {:method "artist.getinfo"
-                         :artist artist
-                         :format "json"
-                         :api_key "6d02d500b71c11ea4a22f28832c82c6b"})
-        response (client/request url)
-        json ((read-json (apply str (response :body-seq))) "artist")]
-    [((json "bio") "summary")
-     ((( json "image") 3) "#text")]))
+  (try
+   (let [url (url-params "http://ws.audioscrobbler.com/2.0/"
+                         {:method "artist.getinfo"
+                          :artist artist
+                          :format "json"
+                          :api_key "6d02d500b71c11ea4a22f28832c82c6b"})
+         response (client/request url)
+         json ((read-json (apply str (response :body-seq))) "artist")]
+     [((json "bio") "summary") ((( json "image") 3) "#text")])
+   (catch java.net.UnknownHostException _
+     ["" ""])
+   (catch java.net.ConnectException _
+     ["" ""])))
 
 (defn artist-page
   [artist]
