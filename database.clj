@@ -7,7 +7,7 @@
 
 (def song-db (ref #{}))
 
-(defn song-from-tag
+(defn- song-from-tag
   [tag file]
   (struct song
           (.getFirstTitle  tag)
@@ -15,7 +15,13 @@
           (.getFirstArtist tag)
           (.getPath file)))
 
-(defn list-mp3
+
+(defn import-file
+  [f]
+  (if-let [tag (.getTag (AudioFileIO/read f))]
+    (dosync (alter song-db conj (song-from-tag tag f)))))
+
+(defn- list-mp3
   []
   (let [is-mp3? (fn [file] (and (.isFile file)
                                 (.. file getName (endsWith ".mp3"))))]
@@ -24,8 +30,7 @@
 (defn load-song-db
   []
   (doseq [f (list-mp3)]
-    (if-let [tag (.getTag (AudioFileIO/read f))]
-      (dosync (alter song-db conj (song-from-tag tag f))))))
+    (import-file f)))
 
 (defn artists
   []

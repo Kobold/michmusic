@@ -3,10 +3,10 @@
         [clojure.contrib.str-utils :only (str-join)])
   (:import [java.security MessageDigest]))
 
-(defn sha
+(defn sha-1
   "Generates a SHA-1 hash of the given input plaintext.
 
-  => (sha \"hi\")
+  => (sha-1 \"hi\")
   \"c22b5f917834269428d6f51b2c5af4cbde6a42\"
   "
   [input]

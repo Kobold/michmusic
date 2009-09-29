@@ -3,10 +3,13 @@
         compojure
         michmusic.html
         michmusic.utils)
-  (:require [clojure.http.client :as client]
+  (:require [clojure.contrib.duck-streams :as duck-streams]
+            [clojure.http.client :as client]
             [compojure.encodings :as encodings]
             [michmusic.database :as db])
   (:import [java.io File]))
+
+(def *upload-directory* (java.io.File. "/Users/kobold/michmusic-storage"))
 
 (defn artist-info
   [artist]
@@ -28,6 +31,17 @@
                  img-src
                  (db/songs-for-artist artist))))
 
+(defn upload-post
+  [request]
+  (let [upload ((get-multipart-params request) :file)
+        dfi (upload :disk-file-item)
+        sha (sha-1 (.getInputStream dfi))
+        storage (File. *upload-directory* (str sha ".mp3"))]
+    (.createNewFile storage)
+    (duck-streams/copy (.getInputStream dfi) storage)
+    (db/import-file storage)
+    (upload-post-html (.getPath storage) sha)))
+
 (defn file-download
   [request]
   (let [[artist title] (map encodings/urldecode (:route-params request))]
@@ -47,9 +61,7 @@
   (GET "/upload/"
     (upload-get-html))
   (POST "/upload/"
-    (let [upload ((get-multipart-params request) :file)]
-      (upload-post-html (upload :filename)
-                        (sha (.getInputStream (upload :disk-file-item))))))
+    upload-post)
   (GET #"/artist/(.+)"
     (artist-page (encodings/urldecode ((:route-params request) 0))))
   (GET #"/file/(.+?)_(.+)\.mp3"
