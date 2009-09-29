@@ -8,13 +8,6 @@
             [michmusic.database :as db])
   (:import [java.io File]))
 
-(defn browse-page
-  [request]
-  (browse-html
-   (map (fn [a] {:label a
-                 :value (str "/artist/" (encodings/urlencode a))})
-        (db/artists))))
-
 (defn artist-info
   [artist]
   (let [url (url-params "http://ws.audioscrobbler.com/2.0/"
@@ -50,7 +43,7 @@
 
 (defroutes webservice
   (GET "/"
-    browse-page)
+    (browse-html (db/artists)))
   (GET "/upload/"
     (upload-get-html))
   (POST "/upload/"

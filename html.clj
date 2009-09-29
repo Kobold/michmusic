@@ -1,5 +1,6 @@
 (ns michmusic.html
-  (:use compojure))
+  (:use compojure)
+  (:require [compojure.encodings :as encodings]))
 
 (defn- html-doc
   [& body]
@@ -22,18 +23,19 @@
      [:div#content
       body]]]))
 
-(defn- destructure-select-option
-  [{l :label v :value}]
-  [l v])
+
+(defn- artist-option
+  [a]
+  [a (str "/artist/" (encodings/urlencode a))])
 
 (defn browse-html
-  [artist-options]
+  [artists]
   (html-doc
     [:div#artists
      [:h2 "Artists"]
      [:select#current-artist {:size 25}
-      (select-options (map destructure-select-option
-                           artist-options))]]
+      (select-options
+       (map artist-option artists))]]
     [:div#main
      [:p "hi"]]))
 
