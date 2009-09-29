@@ -39,7 +39,7 @@
     [:div#main
      [:p "hi"]]))
 
-(defn song-link
+(defn- song-link
   [s]
   (let [t (:title s)]
     (link-to (str "/file/" (:artist s) "_" t ".mp3")
