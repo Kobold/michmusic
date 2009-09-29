@@ -1,4 +1,4 @@
-(ns michmusic.main
+(ns michmusic.controller
   (:use clojure.contrib.json.read
         compojure
         michmusic.html

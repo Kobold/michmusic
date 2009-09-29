@@ -1,7 +1,7 @@
 (ns michmusic.serve
   (:use compojure
         michmusic.database
-        michmusic.main)
+        michmusic.controller)
   (:import [java.util.logging LogManager]
            [java.io StringBufferInputStream]))
 
