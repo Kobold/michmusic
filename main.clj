@@ -1,6 +1,7 @@
 (ns michmusic.main
   (:use clojure.contrib.json.read
-        compojure)
+        compojure
+        michmusic.utils)
   (:require [clojure.http.client :as client]
             [compojure.encodings :as encodings]
             [michmusic.database :as db])
@@ -99,7 +100,10 @@
   (GET "/upload/"
     upload-page)
   (POST "/upload/"
-    (html-doc [:p (prn-str (get-multipart-params request))]))
+    (let [upload ((get-multipart-params request) :test)]
+      (html-doc
+        [:p "Filename: " (upload :filename)]
+        [:p "SHA1: " (sha (.getInputStream (upload :disk-file-item)))])))
   (GET #"/artist/(.+)"
     (artist-page (encodings/urldecode ((:route-params request) 0))))
   (GET #"/file/(.+?)_(.+)\.mp3"
