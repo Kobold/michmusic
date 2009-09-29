@@ -1,15 +1,12 @@
 (ns michmusic.main
   (:use clojure.contrib.json.read
         compojure
+        michmusic.html
         michmusic.utils)
   (:require [clojure.http.client :as client]
             [compojure.encodings :as encodings]
             [michmusic.database :as db])
   (:import [java.io File]))
-
-(defn artist-option
-  [a]
-  [a (str "/artist/" (encodings/urlencode a))])
 
 (defn song-link
   [s]
@@ -31,36 +28,12 @@
      ((( json "image") 3) "#text")]))
 
 
-(defn html-doc
-  [& body]
-  (html
-   (doctype :html4)
-   [:html
-    [:head
-     [:title "Mich House Music"]
-     (include-css "/static/style.css")
-     (include-js "/static/external/jquery-1.3.2.min.js"
-                 "/static/external/swfobject.js"
-                 "/static/external/1bit.js"
-                 "/static/navigation.js")]
-    [:body
-     [:div#navigation
-      (unordered-list [(link-to "/" "Browse")
-                       (link-to "/upload/" "Upload")])]
-     [:h1#title
-      [:img {:src "/static/logo.png" :alt "Mich Music"}]]
-     [:div#content
-      body]]]))
-
-(defn mp3-page
+(defn browse-page
   [request]
-  (html-doc
-    [:div#artists
-     [:h2 "Artists"]
-     [:select#current-artist {:size 25}
-      (select-options (map artist-option (db/artists)))]]
-    [:div#main
-     [:p "hi"]]))
+  (browse-html
+   (map (fn [a] {:label a
+                 :value (str "/artist/" (encodings/urlencode a))})
+        (db/artists))))
 
 (defn artist-page
   [artist]
@@ -72,14 +45,6 @@
      [:p summary]
      (unordered-list
       (map song-link songs)))))
-
-(defn upload-page
-  [request]
-  (html-doc
-    [:h2 "Upload File"]
-    (form-to {:enctype "multipart/form-data"} [:post "/upload/"]
-             (file-upload :test)
-             (submit-button "Go"))))
 
 (defn file-download
   [request]
@@ -96,14 +61,13 @@
 
 (defroutes webservice
   (GET "/"
-    mp3-page)
+    browse-page)
   (GET "/upload/"
-    upload-page)
+    (upload-get-html))
   (POST "/upload/"
-    (let [upload ((get-multipart-params request) :test)]
-      (html-doc
-        [:p "Filename: " (upload :filename)]
-        [:p "SHA1: " (sha (.getInputStream (upload :disk-file-item)))])))
+    (let [upload ((get-multipart-params request) :file)]
+      (upload-post-html (upload :filename)
+                        (sha (.getInputStream (upload :disk-file-item))))))
   (GET #"/artist/(.+)"
     (artist-page (encodings/urldecode ((:route-params request) 0))))
   (GET #"/file/(.+?)_(.+)\.mp3"
