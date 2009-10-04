@@ -23,11 +23,10 @@
                  "/static/external/1bit.js"
                  "/static/navigation.js")]
     [:body
+     [:div#navigation
+      (unordered-list [(link-to "/" "Browse")
+                       (link-to "/upload/" "Upload")])]
      [:div.container
-      [:div#navigation
-       (unordered-list [(link-to "/" "Browse")
-                        (link-to "/upload/" "Upload")])]
-      [:img.center {:src "/static/logo.png" :alt "Mich Music"}]
       [:div#content
        body]]]]))
 
