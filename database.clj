@@ -3,7 +3,7 @@
 
 (def *music-directory* (java.io.File. "/Users/kobold/Music"))
 
-(defstruct song :title :album :artist :path)
+(defstruct song :title :album :artist :year :path)
 
 (def song-db (ref #{}))
 
@@ -13,6 +13,7 @@
           (.getFirstTitle  tag)
           (.getFirstAlbum  tag)
           (.getFirstArtist tag)
+          (.getFirstYear tag)
           (.getPath file)))
 
 

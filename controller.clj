@@ -1,5 +1,6 @@
 (ns michmusic.controller
   (:use clojure.contrib.json.read
+        [clojure.contrib.seq-utils :only (group-by)]
         compojure
         michmusic.html
         michmusic.utils)
@@ -33,7 +34,8 @@
     (artist-html artist
                  summary
                  img-src
-                 (db/songs-for-artist artist))))
+                 (group-by (fn [x] [(:album x) (:year x)])
+                           (db/songs-for-artist artist)))))
 
 (defn upload-post
   [request]

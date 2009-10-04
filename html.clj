@@ -50,10 +50,10 @@
   [s]
   (let [t (:title s)]
     (link-to (str "/file/" (:artist s) "_" t ".mp3")
-             (str t " - " (:album s)))))
+             t)))
 
 (defn artist-html
-  [artist summary img-src songs]
+  [artist summary img-src songs-by-album]
   (html
    [:h2 artist]
    [:div {:class "span-8"}
@@ -61,8 +61,13 @@
    [:div {:class "span-7 last"}
     [:img.center {:src img-src :alt artist}]]
    [:div {:class "span-15 prepend-top last"}
-    (unordered-list
-     (map song-link songs))]))
+    (for [[[album year] songs] songs-by-album]
+      [:div.album
+       [:div.album-header
+        [:h3 album]
+        [:span.year year]]
+       (unordered-list
+        (map song-link songs))])]))
 
 (defn upload-get-html
   []
