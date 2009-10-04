@@ -71,6 +71,6 @@
   (GET #"/file/(.+?)_(.+)\.mp3"
     file-download)
   (GET "/static/*"
-    (or (serve-file static-files (params :*)) :next))
+    (or (serve-file "static" (params :*)) :next))
   (ANY "*"
     (page-not-found)))

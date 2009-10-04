@@ -2,6 +2,9 @@
   (:use compojure)
   (:require [compojure.encodings :as encodings]))
 
+(defn- include-css-media [style media]
+  [:link {:type "text/css" :href style :rel "stylesheet" :media media}])
+
 (defn- html-doc
   [& body]
   (html
@@ -9,19 +12,24 @@
    [:html
     [:head
      [:title "Mich House Music"]
+     (include-css-media "/static/external/screen.css" "screen, projection")
+     (include-css-media "/static/external/print.css" "print")
+     "<!--[if lt IE 8]>"
+     (include-css-media "/static/external/ie.css" "screen, projection")
+     "<![endif]-->"
      (include-css "/static/style.css")
      (include-js "/static/external/jquery-1.3.2.min.js"
                  "/static/external/swfobject.js"
                  "/static/external/1bit.js"
                  "/static/navigation.js")]
     [:body
-     [:div#navigation
-      (unordered-list [(link-to "/" "Browse")
-                       (link-to "/upload/" "Upload")])]
-     [:h1#title
-      [:img {:src "/static/logo.png" :alt "Mich Music"}]]
-     [:div#content
-      body]]]))
+     [:div.container
+      [:div#navigation
+       (unordered-list [(link-to "/" "Browse")
+                        (link-to "/upload/" "Upload")])]
+      [:img.center {:src "/static/logo.png" :alt "Mich Music"}]
+      [:div#content
+       body]]]]))
 
 
 (defn- artist-option
@@ -31,12 +39,12 @@
 (defn browse-html
   [artists]
   (html-doc
-    [:div#artists
+    [:div#artists {:class "span-7"}
      [:h2 "Artists"]
-     [:select#current-artist {:size 25}
+     [:select#current-artist {:class "center" :size 25}
       (select-options
        (map artist-option artists))]]
-    [:div#main
+    [:div#main {:class "span-15 prepend-1 append-1 last"}
      [:p "hi"]]))
 
 (defn- song-link
@@ -49,10 +57,13 @@
   [artist summary img-src songs]
   (html
    [:h2 artist]
-   [:img {:src img-src :alt artist}]
-   [:p summary]
-   (unordered-list
-    (map song-link songs))))
+   [:div {:class "span-8"}
+    [:p summary]]
+   [:div {:class "span-7 last"}
+    [:img.center {:src img-src :alt artist}]]
+   [:div {:class "span-15 prepend-top last"}
+    (unordered-list
+     (map song-link songs))]))
 
 (defn upload-get-html
   []
