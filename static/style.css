@@ -1,5 +1,5 @@
 body {
-    background-color: #111111;
+   background-color: #111111;
 }
 
 #navigation {
@@ -7,8 +7,8 @@ body {
 }
 
 #content {
-    background-color: white;
-    overflow: auto;
+   background-color: white;
+   overflow: auto;
 }
 
 #artists {
@@ -16,7 +16,7 @@ body {
 }
 
 h2 {
-    text-align: center;
+   text-align: center;
 }
 
 #current-artist {
