@@ -1,6 +1,7 @@
 (ns michmusic.database
   (:import [org.cmc.music.myid3 MyID3])
-  (:require [clojure.contrib.str-utils2 :as str-utils2]))
+  (:require [clojure.contrib.seq-utils :as seq-utils]
+            [clojure.contrib.str-utils2 :as str-utils2]))
 
 (def *music-directory* (java.io.File. "/Users/kobold/Music"))
 
@@ -41,10 +42,14 @@
    (map :artist
         (clojure.set/project @song-db [:artist]))))
 
-(defn songs-for-artist
-  [a]
-  (clojure.set/select #(= (:artist %) a)
-                      @song-db))
+(defn songs-by-album
+  [artist]
+  (let [songs (clojure.set/select #(= (:artist %) artist) @song-db)
+        albums (seq-utils/group-by (fn [x] [(:album x) (:year x)])
+                                   (sort-by :track songs))]
+    (sort-by #(nth (key %) 1)
+             (comparator >)
+             albums)))
 
 (defn song-path
   [artist title]
