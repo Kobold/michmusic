@@ -1,5 +1,5 @@
 (ns michmusic.database
-  (:import [org.jaudiotagger.audio AudioFileIO]))
+  (:import [org.cmc.music.myid3 MyID3]))
 
 (def *music-directory* (java.io.File. "/Users/kobold/Music"))
 
@@ -7,20 +7,20 @@
 
 (def song-db (ref #{}))
 
-(defn- song-from-tag
-  [tag file]
+(defn- song-from-metadata
+  [md file]
   (struct song
-          (.getFirstTitle  tag)
-          (.getFirstAlbum  tag)
-          (.getFirstArtist tag)
-          (.getFirstYear tag)
+          (.getSongTitle md)
+          (.getAlbum md)
+          (.getArtist md)
+          (.getYear md)
           (.getPath file)))
 
 
 (defn import-file
   [f]
-  (if-let [tag (.getTag (AudioFileIO/read f))]
-    (dosync (alter song-db conj (song-from-tag tag f)))))
+  (let [md (.. (MyID3.) (read f) getSimplified)]
+    (dosync (alter song-db conj (song-from-metadata md f)))))
 
 (defn- list-mp3
   []
