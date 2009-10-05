@@ -49,8 +49,8 @@
 (defn- song-link
   [s]
   (let [t (:title s)]
-    (link-to (str "/file/" (:artist s) "_" t ".mp3")
-             t)))
+    [:li (:track s) " " (link-to (str "/file/" (:artist s) "_" t ".mp3")
+                                 t)]))
 
 (defn artist-html
   [artist summary img-src songs-by-album]
@@ -66,8 +66,7 @@
        [:div.album-header
         [:h3 album]
         [:span.year year]]
-       (unordered-list
-        (map song-link songs))])]))
+       [:ul (map song-link songs)]])]))
 
 (defn upload-get-html
   []
