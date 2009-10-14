@@ -47,9 +47,7 @@
   (let [songs (clojure.set/select #(= (:artist %) artist) @song-db)
         albums (seq-utils/group-by (fn [x] [(:album x) (:year x)])
                                    (sort-by :track songs))]
-    (sort-by #(nth (key %) 1)
-             (comparator >)
-             albums)))
+    (sort-by #(nth (key %) 1) albums)))
 
 (defn song-path
   [artist title]
