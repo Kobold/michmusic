@@ -46,11 +46,16 @@
     [:div#main {:class "span-15 prepend-1 append-1 last"}
      [:p "hi"]]))
 
-(defn- song-link
-  [s]
-  (let [t (:title s)]
-    [:li (:track s) " " (link-to (str "/file/" (:artist s) "_" t ".mp3")
-                                 t)]))
+(defn album-display
+  "The HTML for a single album and its songs."
+  [[[album year] songs]]
+  [[:div.album-header
+    [:h3 album]
+    [:span.year year]]
+   [:ul (for [s songs]
+          (let [t (:title s)]
+            [:li (:track s) " " (link-to (str "/file/" (:artist s) "_" t ".mp3")
+                                         t)]))]])
 
 (defn artist-html
   [artist summary img-src songs-by-album]
@@ -61,12 +66,7 @@
    [:div {:class "span-7 last"}
     [:img.center {:src img-src :alt artist}]]
    [:div {:class "span-15 prepend-top last"}
-    (for [[[album year] songs] songs-by-album]
-      [:div.album
-       [:div.album-header
-        [:h3 album]
-        [:span.year year]]
-       [:ul (map song-link songs)]])]))
+    (mapcat album-display songs-by-album)]))
 
 (defn upload-get-html
   []

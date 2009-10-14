@@ -1,10 +1,21 @@
 (ns michmusic.test
-  (:require [michmusic.controller :as c])
+  (:require [michmusic.controller :as c]
+            [michmusic.html :as h])
   (:use [clojure.contrib.def :only (defvar-)]
         clojure.test))
 
-(defvar- json-response)
+(deftest t-album-display
+  (let [songs-by-album
+        [["Antidotes" 2008]
+         [{:title "B" :track 9 :album "Antidotes" :artist "Foals" :year 2008}
+          {:title "H" :track 7 :album "Antidotes" :artist "Foals" :year 2008}]]
+        html [[:div.album-header [:h3 "Antidotes"] [:span.year 2008]]
+              [:ul
+               [[:li 9 " " [:a {:href "/file/Foals_B.mp3"} ["B"]]]
+                [:li 7 " " [:a {:href "/file/Foals_H.mp3"} ["H"]]]]]]]
+    (is (= (h/album-display songs-by-album) html))))
 
+(defvar- json-response)
 (deftest t-artist-info
   (let [[summary pic-url] (c/artist-info (fn [url] json-response)
                                          "Tycho")]
