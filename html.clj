@@ -19,8 +19,7 @@
      "<![endif]-->"
      (include-css "/static/style.css")
      (include-js "/static/external/jquery-1.3.2.min.js"
-                 "/static/external/swfobject.js"
-                 "/static/external/1bit.js"
+                 "/static/external/sm2/soundmanager2.js"
                  "/static/navigation.js")]
     [:body
      [:div#navigation
@@ -52,10 +51,13 @@
   [[:div.album-header
     [:h3 album]
     [:span.year year]]
-   [:ul (for [s songs]
-          (let [t (:title s)]
-            [:li (:track s) " " (link-to (str "/file/" (:artist s) "_" t ".mp3")
-                                         t)]))]])
+   [:ul
+    (for [s songs]
+      [:li
+       (:track s) " "
+       [:img.play-button {:src "/static/icons/play.png" :alt "play"}]
+       (link-to (str "/file/" (:artist s) "_" (:title s) ".mp3")
+                (:title s))])]])
 
 (defn artist-html
   [artist summary img-src songs-by-album]
