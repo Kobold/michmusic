@@ -8,6 +8,21 @@ body {
    position: absolute;
 }
 
+#player {
+   color: #EEE;
+   left: 800px;
+   position: absolute;
+   top: 25px;
+}
+
+#player .control {
+   float: left;
+}
+
+#player .info {
+   float: right;
+}
+
 #content {
    background-color: white;
    margin-top: 100px;

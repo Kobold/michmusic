@@ -26,6 +26,12 @@
       (unordered-list [(link-to "/" "Browse")
                        (link-to "/upload/" "Upload")])]
      [:div.container
+      [:div#player
+       [:p.control "pause"]
+       [:p.info
+        [:span.artist]
+        [:br]
+        [:span.song]]]
       [:div#content
        body]]]]))
 
@@ -55,14 +61,14 @@
     (for [s songs]
       [:li
        (:track s) " "
-       [:img.play-button {:src "/static/icons/play.png" :alt "play"}]
+       [:span.play-button "play"] " "
        (link-to (str "/file/" (:artist s) "_" (:title s) ".mp3")
                 (:title s))])]])
 
 (defn artist-html
   [artist summary img-src songs-by-album]
   (html
-   [:h2 artist]
+   [:h2#artist artist]
    [:div {:class "span-8"}
     [:p summary]]
    [:div {:class "span-7 last"}
