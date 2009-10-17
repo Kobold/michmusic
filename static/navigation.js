@@ -12,13 +12,18 @@ var current_state = STATE_INITIAL;
 
 var state_transitions = {};
 state_transitions[[STATE_INITIAL, STATE_PLAYING]] = function () {
-  $('#player').fadeIn('slow');
+  $('#player-control img').attr('src', '/static/icons/pause.png');
+  current_sound.play();
 };
 state_transitions[[STATE_PLAYING, STATE_PAUSED]] = function () {
   $('#player-control img').attr('src', '/static/icons/play.png');
   current_sound.pause();
 };
 state_transitions[[STATE_PAUSED, STATE_PLAYING]] = function () {
+  $('#player-control img').attr('src', '/static/icons/pause.png');
+  current_sound.play();
+};
+state_transitions[[STATE_PLAYING, STATE_PLAYING]] = function () {
   $('#player-control img').attr('src', '/static/icons/pause.png');
   current_sound.play();
 };
@@ -34,7 +39,7 @@ function transition(new_state)
 // current song
 //
 // encapsulates creation and destruction of Sound objects to play
-function initialize_song(mp3_url, artist, song)
+function initialize_song(mp3_url, k)
 {
   if (current_sound !== null) {
     current_sound.destruct();
@@ -44,7 +49,8 @@ function initialize_song(mp3_url, artist, song)
     current_sound = soundManager.createSound({
       id: 'mich_music_sound',
       url: mp3_url,
-      autoPlay: true
+      autoLoad: true,
+      onload: k
     });
   }
 }
@@ -60,8 +66,9 @@ $(function() {
       
       $('#player-artist').text($('#artist').text());
       $('#player-song').text(mp3_link.text());
-      initialize_song(mp3_url);
-      transition(STATE_PLAYING);
+      $('#player-control img').attr('src', '/static/icons/loading.gif');
+      $('#player').fadeIn('slow');
+      initialize_song(mp3_url, function () { transition(STATE_PLAYING); });
     }
   });
 
