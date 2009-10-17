@@ -25,14 +25,14 @@
      [:div#navigation
       (unordered-list [(link-to "/" "Browse")
                        (link-to "/upload/" "Upload")])]
+     [:table#player
+      [:tr
+       [:td#player-control {:rowspan 2}
+        [:img {:alt "play" :src "/static/icons/pause.png"}]]
+       [:td#player-song]]
+      [:tr
+       [:td#player-artist]]]
      [:div.container
-      [:table#player
-       [:tr
-        [:td#player-control {:rowspan 2}
-         [:img {:alt "play" :src "/static/icons/pause.png"}]]
-        [:td#player-song]]
-       [:tr
-        [:td#player-artist]]]
       [:div#content
        body]]]]))
 
@@ -56,8 +56,7 @@
   "The HTML for a single album and its songs."
   [[[album year] songs]]
   [[:div.album-header
-    [:h3 album]
-    [:span.year year]]
+    [:h3 [:span.year year] album]]
    [:ul
     (for [s songs]
       [:li
