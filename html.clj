@@ -26,12 +26,13 @@
       (unordered-list [(link-to "/" "Browse")
                        (link-to "/upload/" "Upload")])]
      [:div.container
-      [:div#player
-       [:p.control "pause"]
-       [:p.info
-        [:span.artist]
-        [:br]
-        [:span.song]]]
+      [:table#player
+       [:tr
+        [:td.control {:rowspan 2}
+         [:img {:alt "play" :src "/static/icons/play.png"}]]
+        [:td.artist]]
+       [:tr
+        [:td.song]]]
       [:div#content
        body]]]]))
 

@@ -9,18 +9,19 @@ body {
 }
 
 #player {
-   color: #EEE;
-   left: 800px;
+   background-color: #C5E0F5;
    position: absolute;
-   top: 25px;
+   left: 800px;
+   top: 0px;
+   margin-bottom: 20px;
+   margin-top: 20px;
+   height: 60px;
+   width: 301px
 }
 
 #player .control {
-   float: left;
-}
-
-#player .info {
-   float: right;
+   text-align: center;
+   width: 20%;
 }
 
 #content {
