@@ -1,11 +1,12 @@
 (ns michmusic.database
   (:import [org.cmc.music.myid3 MyID3])
   (:require [clojure.contrib.seq-utils :as seq-utils]
-            [clojure.contrib.str-utils2 :as str-utils2]))
+            [clojure.contrib.str-utils2 :as str-utils2]
+            [michmusic.utils :as utils]))
 
 (def *music-directory* (java.io.File. "/Users/kobold/Music"))
 
-(defstruct song :title :track :album :artist :year :path)
+(defstruct song :title :track :album :artist :year :sha :path)
 
 (def song-db (ref #{}))
 
@@ -17,6 +18,7 @@
           (.getAlbum md)
           (.getArtist md)
           (.getYear md)
+          (utils/sha-1 file)
           (.getPath file)))
 
 (defn import-file
