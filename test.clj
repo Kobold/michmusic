@@ -9,13 +9,13 @@
         [["Antidotes" 2008]
          [{:title "B" :track 9 :album "Antidotes" :artist "Foals" :year 2008}
           {:title "H" :track 7 :album "Antidotes" :artist "Foals" :year 2008}]]
-        html [[:div.album-header [:h3 "Antidotes"] [:span.year 2008]]
+        html [[:div.album-header [:h3 [:span.year 2008] "Antidotes"]]
               [:ul
                [[:li 9 " "
-                 [:img.play-button {:src "/static/icons/play.png", :alt "play"}]
+                 [:span.play-button "play"] " "
                  [:a {:href "/file/Foals_B.mp3"} ["B"]]]
                 [:li 7 " "
-                 [:img.play-button {:src "/static/icons/play.png", :alt "play"}]
+                 [:span.play-button "play"] " "
                  [:a {:href "/file/Foals_H.mp3"} ["H"]]]]]]]
     (is (= (h/album-display songs-by-album) html))))
 
