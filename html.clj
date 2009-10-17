@@ -28,11 +28,11 @@
      [:div.container
       [:table#player
        [:tr
-        [:td.control {:rowspan 2}
+        [:td#player-control {:rowspan 2}
          [:img {:alt "play" :src "/static/icons/play.png"}]]
-        [:td.artist]]
+        [:td#player-artist]]
        [:tr
-        [:td.song]]]
+        [:td#player-song]]]
       [:div#content
        body]]]]))
 

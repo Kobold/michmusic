@@ -11,7 +11,7 @@ function play_toggle()
     return;
   }
   current_sound.togglePause();
-  $('#player .control')
+  $('#player-control')
     .text(current_sound.paused ? 'play' : 'pause');
 }
 
@@ -31,8 +31,8 @@ function play_song(mp3_url, artist, song)
         autoPlay: true
       });
       
-      $('#player .artist').text(artist);
-      $('#player .song').text(song);
+      $('#player-artist').text(artist);
+      $('#player-song').text(song);
   }
 }
 
@@ -50,7 +50,7 @@ function play_click_delegate(event)
 }
 
 $(function() {
-  $('#player .control').click(play_toggle);
+  $('#player-control').click(play_toggle);
   $('#main').click(play_click_delegate);
 
   // update the main div when a new artist is selected from the list
