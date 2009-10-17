@@ -1,8 +1,19 @@
 (ns michmusic.test
   (:require [michmusic.controller :as c]
+            [michmusic.database :as db]
             [michmusic.html :as h])
   (:use [clojure.contrib.def :only (defvar-)]
         clojure.test))
+
+(deftest t-import
+  (do (db/import-file (java.io.File. "test/test.mp3"))
+      (is (= @db/song-db
+             #{{:title "Intro"
+                :track 1
+                :album "Devin Dazzle And The Neon Fever"
+                :artist "Felix Da Housecat"
+                :year nil
+                :path "test/test.mp3"}}))))
 
 (deftest t-album-display
   (let [songs-by-album
