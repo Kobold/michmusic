@@ -5,14 +5,6 @@ soundManager.url = '/static/external/sm2/swf/';
 // the currently playing song, if any
 var current_sound = null;
 
-// update the main div when a new artist is selected from the list
-function artist_selected(event)
-{
-  $.get($(this).val(), {}, function(data) {
-    $('#main').html(data);
-  });
-}
-
 function play_toggle()
 {
   if (current_sound === null) {
@@ -58,7 +50,13 @@ function play_click_delegate(event)
 }
 
 $(function() {
-  $('#current-artist').change(artist_selected);
   $('#player .control').click(play_toggle);
   $('#main').click(play_click_delegate);
+
+  // update the main div when a new artist is selected from the list
+  $('#current-artist').change(function () {
+    $.get($(this).val(), {}, function(data) {
+      $('#main').html(data);
+    });
+  });
 });
