@@ -52,8 +52,6 @@
     (sort-by #(nth (key %) 1) albums)))
 
 (defn song-path
-  [artist title]
-  (let [[s] (filter #(and (= (:artist %) artist)
-                         (= (:title %) title))
-                   @song-db)]
+  [sha]
+  (let [[s] (filter #(= (:sha %) sha) @song-db)]
     (if s (:path s))))

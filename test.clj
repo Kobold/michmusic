@@ -16,19 +16,24 @@
                 :year nil
                 :path "test/test.mp3"}}))))
 
+(deftest t-song-path
+  (do (db/import-file (java.io.File. "test/test.mp3"))
+      (is (= (db/song-path "92d69686d9766cfb77c25c1c786cebce39a561b1")
+             "test/test.mp3"))))
+
 (deftest t-album-display
   (let [songs-by-album
         [["Antidotes" 2008]
-         [{:title "B" :track 9 :album "Antidotes" :artist "Foals" :year 2008}
-          {:title "H" :track 7 :album "Antidotes" :artist "Foals" :year 2008}]]
+         [{:title "B" :track 9 :album "Antidotes" :artist "Foals" :year 2008 :sha "bob"}
+          {:title "H" :track 7 :album "Antidotes" :artist "Foals" :year 2008 :sha "bob"}]]
         html [[:div.album-header [:h3 [:span.year 2008] "Antidotes"]]
               [:ul
                [[:li 9 " "
                  [:span.play-button "play"] " "
-                 [:a {:href "/file/Foals_B.mp3"} ["B"]]]
+                 [:a {:href "/file/bob/Foals_B.mp3"} ["B"]]]
                 [:li 7 " "
                  [:span.play-button "play"] " "
-                 [:a {:href "/file/Foals_H.mp3"} ["H"]]]]]]]
+                 [:a {:href "/file/bob/Foals_H.mp3"} ["H"]]]]]]]
     (is (= (h/album-display songs-by-album) html))))
 
 (defvar- json-response)

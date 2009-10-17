@@ -48,8 +48,8 @@
 
 (defn file-download
   [request]
-  (let [[artist title] (map encodings/urldecode (:route-params request))]
-    (if-let [path (db/song-path artist title)]
+  (let [[sha1] (:route-params request)]
+    (if-let [path (db/song-path sha1)]
       (File. path)
       :next)))
 
@@ -68,7 +68,7 @@
     upload-post)
   (GET #"/artist/(.+)"
     (artist-page (encodings/urldecode ((:route-params request) 0))))
-  (GET #"/file/(.+?)_(.+)\.mp3"
+  (GET #"/file/([a-f0-9]{10,40})/.+\.mp3"
     file-download)
   (GET "/static/*"
     (or (serve-file "static" (params :*)) :next))

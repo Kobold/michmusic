@@ -62,7 +62,7 @@
       [:li
        (:track s) " "
        [:span.play-button "play"] " "
-       (link-to (str "/file/" (:artist s) "_" (:title s) ".mp3")
+       (link-to (str "/file/" (:sha s) "/" (:artist s) "_" (:title s) ".mp3")
                 (:title s))])]])
 
 (defn artist-html
