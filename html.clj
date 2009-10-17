@@ -29,10 +29,10 @@
       [:table#player
        [:tr
         [:td#player-control {:rowspan 2}
-         [:img {:alt "play" :src "/static/icons/play.png"}]]
-        [:td#player-artist]]
+         [:img {:alt "play" :src "/static/icons/pause.png"}]]
+        [:td#player-song]]
        [:tr
-        [:td#player-song]]]
+        [:td#player-artist]]]
       [:div#content
        body]]]]))
 
