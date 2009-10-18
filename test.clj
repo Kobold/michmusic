@@ -10,8 +10,8 @@
       (is (= @db/song-db
              #{{:title "Intro"
                 :track 1
-                :album "Devin Dazzle And The Neon Fever"
-                :artist "Felix Da Housecat"
+                :album "Devin Dazzle and the Neon Fever"
+                :artist "Felix da Housecat"
                 :sha "92d69686d9766cfb77c25c1c786cebce39a561b1"
                 :year nil
                 :path "test/test.mp3"}}))))

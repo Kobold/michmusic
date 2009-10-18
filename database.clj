@@ -21,9 +21,20 @@
           (utils/sha-1 file)
           (.getPath file)))
 
+(defn- unified-metadata
+  [md-set]
+  (let [id3v1 (.id3v1Raw md-set)
+        id3v2 (.id3v2Raw md-set)]
+    (assert (or id3v1 id3v2))
+    (cond (and id3v1 id3v2) (doto (.values id3v2)
+                              (.mergeValuesIfMissing (.values id3v1)))
+          id3v2 (.values id3v2)
+          id3v1 (.values id3v1))))
+
 (defn import-file
   [f]
-  (let [md (.. (MyID3.) (read f) getSimplified)]
+  (let [md-set (.read (MyID3.) f)
+        md (unified-metadata md-set)]
     (if (.hasBasicInfo md)
       (dosync (alter song-db conj (song-from-metadata md f))))))
 
