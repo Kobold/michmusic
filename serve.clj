@@ -1,14 +1,7 @@
 (ns michmusic.serve
   (:use compojure
         michmusic.database
-        michmusic.controller)
-  (:import [java.util.logging LogManager]
-           [java.io StringBufferInputStream]))
-
-; disable jaudiotagger's crazy logging
-(let [stream (StringBufferInputStream. "org.jaudiotagger.level = OFF")]
-  (.. (LogManager/getLogManager)
-      (readConfiguration stream)))
+        michmusic.controller))
 
 (run-server {:port 8080} 
             "/*"
