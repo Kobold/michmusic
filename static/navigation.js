@@ -26,6 +26,8 @@ function play_song(mp3_url, k)
 }
 
 $(function() {
+  var player_icon = $('#player-control img');
+  
   // event delegate that plays mp3s when there's a click on a play
   // button within the #main div
   $('#main').click(function (event) {
@@ -37,22 +39,22 @@ $(function() {
       // set up the player display
       $('#player-artist').text($('#artist').text());
       $('#player-song').text(mp3_link.text());
-      $('#player-control img').attr('src', '/static/icons/loading.gif');
+      player_icon.attr('src', '/static/icons/loading.gif');
       
       $('#player').fadeIn('slow');
       
       play_song(mp3_url, function () {
-        $('#player-control img').attr('src', '/static/icons/pause.png');
+        player_icon.attr('src', '/static/icons/pause.png');
         current_sound.play();
       });
     }
   });
 
-  $('#player-control img').click(function () {
+  player_icon.click(function () {
     current_sound.togglePause();
 
     var state = current_sound.paused ? 'play' : 'pause';
-    $('#player-control img').attr('src', '/static/icons/' + state + '.png');
+    player_icon.attr('src', '/static/icons/' + state + '.png');
   });
 
   // update the main div when a new artist is selected from the list
