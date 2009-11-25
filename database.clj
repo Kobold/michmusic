@@ -7,8 +7,6 @@
 
 (def *music-directory* (java.io.File. "/Users/kobold/Music"))
 
-(cb/open-cupboard! "/tmp/songs")
-
 (cb/defpersist song
   ((:title :index :any)
    (:track :index :any)

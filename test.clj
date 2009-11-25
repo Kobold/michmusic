@@ -1,25 +1,30 @@
 (ns michmusic.test
-  (:require [michmusic.controller :as c]
+  (:require [cupboard.core :as cb]
+            [michmusic.controller :as c]
             [michmusic.database :as db]
             [michmusic.html :as h])
   (:use [clojure.contrib.def :only (defvar-)]
-        clojure.test))
+        clojure.contrib.test-is))
 
 (deftest t-import
-  (do (db/import-file (java.io.File. "test/test.mp3"))
-      (is (= @db/song-db
-             #{{:title "Intro"
-                :track 1
-                :album "Devin Dazzle and the Neon Fever"
-                :artist "Felix da Housecat"
-                :sha "92d69686d9766cfb77c25c1c786cebce39a561b1"
-                :year nil
-                :path "test/test.mp3"}}))))
+  (cb/with-open-cupboard ["/tmp/test_songs"]
+    (cb/clear-shelf)
+    (db/import-file (java.io.File. "test/test.mp3"))
+    (is (= (cb/query)
+           [{:title "Intro"
+             :track 1
+             :album "Devin Dazzle and the Neon Fever"
+             :artist "Felix da Housecat"
+             :sha "92d69686d9766cfb77c25c1c786cebce39a561b1"
+             :year nil
+             :path "test/test.mp3"}]))))
 
 (deftest t-song-path
-  (do (db/import-file (java.io.File. "test/test.mp3"))
-      (is (= (db/song-path "92d69686d9766cfb77c25c1c786cebce39a561b1")
-             "test/test.mp3"))))
+  (cb/with-open-cupboard ["/tmp/test_songs"]
+    (cb/clear-shelf)
+    (db/import-file (java.io.File. "test/test.mp3"))
+    (is (= (db/song-path "92d69686d9766cfb77c25c1c786cebce39a561b1")
+           "test/test.mp3"))))
 
 (deftest t-album-display
   (let [songs-by-album
