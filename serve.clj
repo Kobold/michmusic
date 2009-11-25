@@ -1,4 +1,5 @@
 (ns michmusic.serve
+  (:require [cupboard.core :as cb])
   (:use compojure
         michmusic.database
         michmusic.controller))

@@ -7,7 +7,7 @@
             [clojure.http.client :as client]
             [compojure.encodings :as encodings]
             [michmusic.database :as db])
-  (:import [java.io File]))
+  (:import [java.io File ByteArrayInputStream ByteArrayOutputStream]))
 
 (def *upload-directory* (java.io.File. "/Users/kobold/michmusic-storage"))
 
@@ -53,6 +53,17 @@
       (File. path)
       :next)))
 
+(defn zip-download
+  [request]
+  (let [zipname (apply encodings/urldecode (:route-params request))
+        [_ artist album] (re-find #"(.+?) - (.+)" zipname)
+        ostream (ByteArrayOutputStream.)]
+    (zip-files artist
+               album
+               (db/songs-for-album artist album)
+               ostream)
+    (ByteArrayInputStream. (.toByteArray ostream))))
+
 (def static-files
      #^{:doc "Location of static files (css, images, etc)."}
      (str (.getParent (File. *file*))
@@ -70,6 +81,8 @@
     (artist-page (encodings/urldecode ((:route-params request) 0))))
   (GET #"/file/([a-f0-9]{10,40})/.+\.mp3"
     file-download)
+  (GET #"/file/(.+?).zip"
+    zip-download)
   (GET "/static/*"
     (or (serve-file "static" (params :*)) :next))
   (ANY "*"

@@ -62,9 +62,13 @@
 (defn songs-by-album
   [artist]
   (let [songs (cb/query (= :artist artist) :struct song)
-        albums (seq-utils/group-by (fn [x] [(:album x) (:year x)])
+        albums (seq-utils/group-by (fn [x] [(:artist x) (:album x) (:year x)])
                                    (sort-by :track songs))]
     (sort-by #(nth (key %) 1) albums)))
+
+(defn songs-for-album
+  [artist album]
+  (cb/query (= :artist artist) (= :album album) :struct song))
 
 (defn song-path
   [sha]
