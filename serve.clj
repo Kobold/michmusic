@@ -7,6 +7,6 @@
             "/*"
             (servlet webservice))
 
-(.start
- (Thread.
-  (load-song-db)))
+;(.start
+; (Thread.
+;  (load-song-db)))

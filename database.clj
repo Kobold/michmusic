@@ -2,24 +2,31 @@
   (:import [org.cmc.music.myid3 MyID3])
   (:require [clojure.contrib.seq-utils :as seq-utils]
             [clojure.contrib.str-utils2 :as str-utils2]
+            [cupboard.core :as cb]
             [michmusic.utils :as utils]))
 
 (def *music-directory* (java.io.File. "/Users/kobold/Music"))
 
-(defstruct song :title :track :album :artist :year :sha :path)
+(cb/open-cupboard! "/tmp/songs")
 
-(def song-db (ref #{}))
+(cb/defpersist song
+  ((:title :index :any)
+   (:track :index :any)
+   (:album :index :any)
+   (:artist :index :any)
+   (:year :index :any)
+   (:sha :index :unique)
+   (:path :index :unique)))
 
 (defn- song-from-metadata
   [md file]
-  (struct song
-          (.getSongTitle md)
-          (.getTrackNumberNumeric md)
-          (.getAlbum md)
-          (.getArtist md)
-          (.getYear md)
-          (utils/sha-1 file)
-          (.getPath file)))
+  [(.getSongTitle md)
+   (.getTrackNumberNumeric md)
+   (.getAlbum md)
+   (.getArtist md)
+   (.getYear md)
+   (utils/sha-1 file)
+   (.getPath file)])
 
 (defn- unified-metadata
   [md-set]
@@ -36,7 +43,7 @@
   (let [md-set (.read (MyID3.) f)
         md (unified-metadata md-set)]
     (if (.hasBasicInfo md)
-      (dosync (alter song-db conj (song-from-metadata md f))))))
+      (cb/make-instance song (song-from-metadata md f)))))
 
 (defn- list-mp3
   []
@@ -51,18 +58,17 @@
 
 (defn artists
   []
-  (sort
-   (map :artist
-        (clojure.set/project @song-db [:artist]))))
+  (apply sorted-set
+         (map :artist (cb/query :struct song))))
 
 (defn songs-by-album
   [artist]
-  (let [songs (clojure.set/select #(= (:artist %) artist) @song-db)
+  (let [songs (cb/query (= :artist artist) :struct song)
         albums (seq-utils/group-by (fn [x] [(:album x) (:year x)])
                                    (sort-by :track songs))]
     (sort-by #(nth (key %) 1) albums)))
 
 (defn song-path
   [sha]
-  (let [[s] (filter #(= (:sha %) sha) @song-db)]
+  (let [[s] (cb/query (= :sha sha))]
     (if s (:path s))))
