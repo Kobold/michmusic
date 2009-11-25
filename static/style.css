@@ -52,12 +52,18 @@ h2 {
    margin-right: auto;
 }
 
-.album-header h3 {
+.album-header {
    background-color: #E1CCF0;
    border: 1.5px solid #A466D4;
    padding: 0.3em 1em 0.3em 1em;
    -moz-border-radius: 1.5em;
    -webkit-border-radius: 1.5em;
+}
+
+.album-header a {
+    position: relative;
+    font-size: 0.6em;
+    bottom: 0.22em;
 }
 
 .album-header .year {

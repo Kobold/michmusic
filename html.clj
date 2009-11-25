@@ -55,10 +55,11 @@
 (defn album-display
   "The HTML for a single album and its songs."
   [[[artist album year] songs]]
-  [[:div.album-header
-    [:h3 [:span.year year] album]
-    [:span (link-to (str "/file/" artist " - " album ".zip")
-             "download album")]]
+  [[:h3.album-header
+    [:span.year year]
+    album " "
+    (link-to (str "/file/" artist " - " album ".zip")
+             "download album")]
    [:ul
     (for [s songs]
       [:li
